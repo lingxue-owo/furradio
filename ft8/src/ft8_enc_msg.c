@@ -1,5 +1,7 @@
 #include "ft8_enc.h"
 
+#define DEBUG 1
+
 // bit  length note
 // 0 -76    77 message
 // 77-90    14 crc  checksum
@@ -12,119 +14,181 @@
 // 43-71    29 Message B
 // 72-78     7 costas array sequence
 
-#define BIT_LENGTH  174 /* ldpc(174,91) encode output*/
-static u08 bit[BIT_LENGTH];
+static u08 g_buff[22];
+static const char g_table[] =" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ+-./?";
+//                          ^^         ^11
 
-static int  type_to_i3n3(u08 *msg, const int type, const int subtype);
-//static int  text_to_f71(u08 *msg, const char *text);
-//static int  data_to_t71(u08 *msg, const u08  *data);
-//static int  call_to_c28(u08 *msg, const char *call);
-//static int  call_to_c58(u08 *msg, const char *call);
-//static int  call_to_h12(u08 *msg, const char *call);
-//static int  grid_to_g15(u08 *msg, const char *grid);
+#if 0
+//static int  call_to_c28(u32 *p, const char *call);
+//static int  call_to_c58(u32 *p, const char *call);
+//static int  call_to_h12(u32 *p, const char *call);
+//static int  grid_to_g15(u32 *p, const char *grid);
 
-static void fitbit(u08 *bit, u32 data, int length);
-static void enc(u08 *symbol, u08 *bit);
-static void crc(u08 *chk, const u08 *msg);
-static void crc_shift(u08 *p);
-static void crc_xor(u08 *p);
-//static void ldpc(u08 *chk, const u08 *msg);
-static void map(u08* symbol, u08* bit);
+static int  text_to_f71(u32 *p, const char *text);
+static int  idx(const char *g_table, int len, char ch);
+static void x42(u08 *bit);
+static void add(u08 *bit, int n);
+#endif
+
+static void clear();
+static void data_to_t71(const u08  *data);
+static void add_type(u08 type);
+static void add_subtype(u08 subtype);
+static void add_crc();
+static void add_ldpc();
+static void sybmap(u08* symbol, int bitpos);
 static void costas(u08* symbol);
+
+#if DEBUG
+static void _print_symb(u08* symbol);
+static void _print_bit();
+#endif
 
 /* 00 Free Text */
 int ft8_encode_00(u08 *symbol, const char *text)
 {
 	int ret = 0;
-	type_to_i3n3(bit+ 0, 0, 0);
-//	ret |= text_to_f71(bit + 6, text);
-	enc(symbol, bit);
+	clear();
+//	ret |= text_to_f71 (buff + 0, text); /* bit 0-70 */
+	g_buff[2] |= (0 << 7);  /* n3=0 bit 71-73 */
+	g_buff[2] |= (1 << 10); /* i3=0 bit 74-76 */
+	//	crc( bit + 77, bit);
+	//	ldpc(bit + 91, bit);
+	costas(symbol +  0);
+	sybmap(symbol +  7, 0);
+	costas(symbol + 36);
+	sybmap(symbol + 43, 87);
+	costas(symbol + 72);
+#if DEBUG
+	_print_symb(symbol);
+	_print_bit();
+#endif
 	return ret;
 }
 
 int ft8_encode_05(u08 *symbol, const u08 data[18])
 {
-	int ret = 0;
-	ret |= type_to_i3n3(bit + 0, 0, 5);
-//	ret |= data_to_t71 (bit + 6, data);
-	enc(symbol, bit);
-	return ret;
-}
-
-static int type_to_i3n3(u08 *msg, const int type, const int subtype)
-{
-	int ret = 0;
-	fitbit(msg + 0, type, 3);
-	if (type == 0)
-		fitbit(msg + 3, subtype, 3);
-	return ret;
-}
-
-static void fitbit(u08 *bit, u32 data, int length)
-{
-	int i;
-	for (i = 0; i < length; ++i)
-		bit[i] = (data & (1u << i)) ? 1 : 0;
-}
-
-static void enc(u08 *symbol, u08 *bit)
-{
-	crc( bit + 77, bit);
-//	ldpc(bit + 91, bit);
-	costas(symbol + 0);
-	map(   symbol + 36, bit + 0);
-	costas(symbol + 0);
-	map(   symbol + 43, bit + 87);
+	clear();
+	data_to_t71(data);
+	add_subtype(5);
+	add_type(0);
+	add_crc();
+	add_ldpc();
+	costas(symbol +  0);
+	sybmap(symbol +  7, 0);
+	costas(symbol + 36);
+	sybmap(symbol + 43, 87);
 	costas(symbol + 72);
-	return;
+#if DEBUG
+	printf("ENC05\n");
+	_print_symb(symbol);
+	_print_bit();
+#endif
+	return 0;
 }
 
-static void crc(u08 *chk, const u08 *msg)
+static void data_to_t71(const u08 *data)
 {
-	int i;
-	static u08 crc[14] = {0};
-	for (i = 0; i < 82; ++i) {
-		if (i < 77)
-			crc[0] ^= msg[i];
-		if (crc[0]) {
-			crc_shift(crc);
-			crc_xor(crc);
-		} else {
-			crc_shift(crc);
+	int i, j, cnt;
+	g_buff[0] |= (data[0] & 0x07) << 5;
+	cnt = 3;
+	for (i = 1; i < 18; i++) {
+		for (j = 0; j < 4; j++) {
+			if (data[i] & (0x08 >> (j % 4)))
+				g_buff[cnt/8] |= 0x80 >> (cnt % 8);
+			++cnt;
 		}
 	}
-	for (i = 0; i < 14; i++)
-		chk[i] = crc[i];
+}
+
+#if 0
+static int text_to_f71(u08 *bit, const char *text)
+{
+	int ret, i;
+	ret = 0;
+	for (i = 0; i < 71; ++i)
+		bit[i] = 0;
+	for (i = 0; i < 13; ++i) {
+		if (!text[i]) break;
+		x42(bit);
+		int n = idx(g_table, 42, text[i]);
+		add(bit, n);
+	}
+	return ret;
+}
+
+static void x42(u08 *bit)
+{
+
+}
+
+static void add(u08 *bit, int n)
+{
+
+}
+
+static int idx(const char *g_table, int len, char ch)
+{
+	int n;
+	for (n = 0; n < len; n++)
+		if (g_table[n] == ch)
+			return n;
+	return -1;
+}
+#endif
+
+static void add_type(u08 type)
+{
+	type &= 0x07;
+	g_buff[9] |= type << 3;
 	return;
 }
 
-static void crc_shift(u08 *p)
+static void add_subtype(u08 subtype)
 {
-	int j;
-	for (j = 0; j < 13; ++j)
-		p[j] = p[j + 1];
-	p[13] = 0;
+	subtype &= 0x07;
+	g_buff[8] |= subtype >> 2;
+	g_buff[9] |= subtype << 6;
 }
 
-static void crc_xor(u08 *p)
+static void add_crc()
 {
-	int j;
-	const static int poly[14] = {
-		1,0, 0,1,1,1, 0,1,0,1, 0,1,1,1,
-	}; /* 0x2757 */
-	for (j = 0; j < 14; ++j)
-		p[j] ^= poly[j];
+	int i, bit;
+	unsigned short crc = 0;
+	for (i = 0; i < 82; ++i) {
+		if (i < 77) {
+			bit = g_buff[i >> 3] & (0x80u >> (i & 0x7));
+			crc ^=  bit ? 0x2000 : 0;
+		}
+		if (crc & 0x2000) {
+			crc <<= 1;
+			crc ^= 0x2757;
+		} else {
+			crc <<= 1;
+		}
+	}
+	crc &= 0x3fff;
+	g_buff[9]  |= (crc >> 11) & 0xff;
+	g_buff[10] |= (crc >> 3 ) & 0xff;
+	g_buff[11] |= (crc << 5 ) & 0xff;
 }
 
-static void map(u08* symbol, u08* bit)
+static void add_ldpc()
 {
-	int i, t;
+	return;
+}
+
+static void sybmap(u08* symbol, int pos)
+{
+	int i, j, n, b, t;
 	const static u08 gray_table[8] = {0,1,3,2,5,6,4,7};
-	for (i = 0; i < 29; ++i) {
+	for (i = 0 ; i < 29; ++i) {
 		t = 0;
-		t |= bit[3*i+0] ? 0x01 : 0;
-		t |= bit[3*i+1] ? 0x02 : 0;
-		t |= bit[3*i+2] ? 0x04 : 0;
+		for (j = 0; j < 3; j++) {
+			n = 3 * i + j + pos;
+			b = g_buff[n / 8] & (0x80u >> (n % 8));
+			t |= b ? (0x4u >> j) : 0;
+		}
 		symbol[i] = gray_table[t];
 	}
 	return;
@@ -139,4 +203,32 @@ static void costas(u08* symbol)
 	return;
 }
 
+static void clear()
+{
+	int i;
+	for (i = 0; i < 10; i++)
+		g_buff[i] = 0;
+}
 
+#if DEBUG
+static void _print_symb(u08* symbol)
+{
+	int i;
+	for (i = 0; i < 79; ++i)
+		printf("%u ", symbol[i]);
+	printf("\n");
+}
+
+static void _print_bit()
+{
+	int i, j;
+	for (i = 0; i < 10; i++)
+		for (j = 0; j < 8; j++)
+			printf("%c", (g_buff[i] & (0x80 >> j)) ? '1' : '0');
+	printf("\n");
+
+	for (i = 0; i < 10; ++i)
+		printf("%02x ", g_buff[i]);
+	printf("\n");
+}
+#endif

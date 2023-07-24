@@ -1,7 +1,7 @@
 #include <math.h>
 #include "ft8_enc.h"
 
-#define DEBUG_ 1
+#define DEBUG_ 0
 #if DEBUG_
 #include <stdio.h>
 #endif
