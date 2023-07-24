@@ -32,7 +32,7 @@ int main(void) {
 	u08 symb0[79] = {0};
 	u08 data[18] = {1,2,3,4,5,6,7,8,9,0xa,0xb,0xc,0xd,0xe,0xf,0,0xa,0xa};
 	ft8_encode_05(symb0, data);
-//  ft8_encode_00(sumb0, "TExT");
+    ft8_encode_00(symb0, "TEST TEXT");
 //	ft8_encode_1(symb0, "CQ", FALSE, "BG3ILA", FALSE, FALSE, "ON63");
 
 	return 0;
