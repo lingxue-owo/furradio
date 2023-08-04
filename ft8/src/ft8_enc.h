@@ -22,20 +22,36 @@ s16 ft8_wave_getsample();
  * message type 1   StdMsg
  * message type 4   Non-std Callsign */
 
-int ft8_encode_00(u08 *symbol, const char *text);
-int ft8_encode_05(u08 *symbol, const u08 data[18]);
-#if 0
-int ft8_encode_1(u08 *symbol,
-		const char *remote_call, const int is_remote_rover,
-		const char *local_call, const int is_local_rover,
-		const int is_r, const char *report);
-int ft8_encode_4(u08 *symbol,
-		const u32 hash12, const char *nonstd_call,
-		const int is_hash, const int qsl, const int is_cq);
-#define FT8_QSL_BLANK 0x00
-#define FT8_QSL_RRR   0x02
-#define FT8_QSL_RR73  0x04
-#define FT8_QSL_73    0x08
-#endif
+#define FT8_CALL_TYPE_DE     0x00
+#define FT8_CALL_TYPE_QRZ    0x01
+#define FT8_CALL_TYPE_CQ     0x02
+#define FT8_CALL_TYPE_CQ_NUM 0x03
+#define FT8_CALL_TYPE_CQ_TXT 0x04
+#define FT8_CALL_TYPE_NSTD   0x05
+#define FT8_CALL_TYPE_STD    0x06
+
+#define FT8_REPORT_TYPE_BLANK 0x01
+#define FT8_REPORT_TYPE_RRR   0x02
+#define FT8_REPORT_TYPE_RR73  0x03
+#define FT8_REPORT_TYPE_73    0x04
+#define FT8_REPORT_TYPE_GRID  0x05
+#define FT8_REPORT_TYPE_SNR   0x06
+
+struct std_msg_t {
+	u08   call_1_type, call_2_type, report_type;
+	s16   cq_num_1,    cq_num_2,    snr;
+	u08   call_1_r,    call_2_r,    report_r;
+	const char  *call_1, *call_2,   *grid;
+};
+
+struct nstd_call_t {
+	const char *hash_call, *text_call;
+	u08 is_hash_local, is_cq, report;
+};
+
+int ft8_encode_00(u08 *symbol, const char *freetext);
+int ft8_encode_05(u08 *symbol, const u08 telemetry[18]);
+int ft8_encode_1(u08 *symbol, const struct std_msg_t *p);
+int ft8_encode_4(u08 *symbol, const struct nstd_call_t *p);
 
 #endif /* FT8_ENC_H_ */

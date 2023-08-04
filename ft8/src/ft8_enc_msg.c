@@ -1,7 +1,9 @@
 #include "ft8_enc.h"
 
 #define DEBUG 1
-
+#if DEBUG
+#include <stdio.h>
+#endif
 // bit  length note
 // 0 -76    77 message
 // 77-90    14 crc  checksum
@@ -16,20 +18,24 @@
 
 static u08 g_buff[22];
 static const char g_table[] =" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ+-./?";
-//                          ^^         ^11
 
-#if 0
-//static int  call_to_c28(u32 *p, const char *call);
-//static int  call_to_c58(u32 *p, const char *call);
-//static int  call_to_h12(u32 *p, const char *call);
-//static int  grid_to_g15(u32 *p, const char *grid);
-#endif
-
+static u64  call_to_c58(const char *call);
+static u32  call_to_c28(const int type, const char *call, const int num);
+static u16  grid_to_g15(const int type, const char *grid, const int snr);
 static void freetext_to_f71(const char *text);
 static void telemetry_to_t71(const u08 *data);
 static void type_to_i3(u08 type);
 static void subtype_to_n3(u08 subtype);
 
+static u32  stdcall_to_uint(const char *call);
+static u16  grid_to_uint(const char *grid);
+static u16  snr_to_uint(const int snr);
+static u32  cqtext_to_uint(const char *text);
+static void makeup_3da0(char *buff, const char *call, const int length);
+static void makrup_3x(char *buff, const char *call, const int length);
+static void addspace_xnxxx(char *buff, const char *call, const int length);
+static int  calllen(const char *c);
+static u32  hash(const u64 c58, const int bit);
 static u08  idx(const char *table, int len, char ch);
 static void mul(u08 *bit, u08 x);
 static void add(u08 *bit, u08 x);
@@ -52,10 +58,6 @@ int ft8_encode_00(u08 *symbol, const char *text)
 	subtype_to_n3(0);
 	type_to_i3(0);
 	symbol_gen(symbol);
-#if DEBUG
-	_print_bit();
-	_print_symb(symbol);
-#endif
 	return 0;
 }
 
@@ -67,6 +69,218 @@ int ft8_encode_05(u08 *symbol, const u08 data[18])
 	type_to_i3(0);
 	symbol_gen(symbol);
 	return 0;
+}
+
+int ft8_encode_1(u08 *symbol, const struct std_msg_t *p)
+{
+	u32 c28;
+	u16 g15;
+	clear_buff();
+	c28 = call_to_c28(p->call_1_type, p->call_1, p->cq_num_1);
+	g_buff[0]  = c28 >> 20;
+	g_buff[1]  = c28 >> 12;
+	g_buff[2]  = c28 >>  4;
+	g_buff[3] |= c28 << 4;
+	g_buff[3] |= p->call_1_r ? 0x08 : 0x00;
+	c28 = call_to_c28(p->call_2_type, p->call_2, p->cq_num_2);
+	g_buff[3] |= (c28 >> 25) & 0x07;
+	g_buff[4]  = c28 >> 17;
+	g_buff[5]  = c28 >> 9;
+	g_buff[6]  = c28 >> 1;
+	g_buff[7] |= c28 << 7;
+	g_buff[7] |= p->call_2_r ? 0x40 : 0x00;
+	g_buff[7] |= p->report_r ? 0x20 : 0x00;
+	g15 = grid_to_g15(p->report_type, p->grid, p->snr);
+	g_buff[7] |= (g15 >> 10) & 0x1f;
+	g_buff[8]  = g15 >> 2;
+	g_buff[9] |= g15 << 6;
+	type_to_i3(1);
+	symbol_gen(symbol);
+	return 0;
+}
+
+int ft8_encode_4(u08 *symbol, const struct nstd_call_t *p)
+{
+	u16 h12;
+	u64 c58;
+	c58 = call_to_c58(p->hash_call);
+	h12 = hash(c58, 12);
+	c58 = call_to_c58(p->text_call);
+	clear_buff();
+	g_buff[0]  = h12 >> 4;
+	g_buff[1] |= h12 << 4;
+	g_buff[1] |= c58 >> 54;
+	g_buff[2]  = c58 >> 46;
+	g_buff[3]  = c58 >> 38;
+	g_buff[4]  = c58 >> 30;
+	g_buff[5]  = c58 >> 22;
+	g_buff[6]  = c58 >> 14;
+	g_buff[7]  = c58 >> 6;
+	g_buff[8] |= c58 << 2;
+	g_buff[8] |=(p->is_hash_local ? 0x02 : 0);
+	switch (p->report) {
+	case FT8_REPORT_TYPE_RRR:  g_buff[9] |= 0x80; break;
+	case FT8_REPORT_TYPE_RR73: g_buff[8] |= 0x01; break;
+	case FT8_REPORT_TYPE_73:
+		g_buff[8] |= 0x01; g_buff[9] |= 0x80; break;
+	default: break;
+	}
+	g_buff[9] |= (p->is_cq ? 0x40 : 0);
+	type_to_i3(4);
+	symbol_gen(symbol);
+	return 0;
+}
+
+static u16  grid_to_g15(const int type, const char *grid, const int snr)
+{
+	u16 ret;
+	switch (type) {
+	case FT8_REPORT_TYPE_BLANK: ret = 32401; break;
+	case FT8_REPORT_TYPE_RRR:   ret = 23402; break;
+	case FT8_REPORT_TYPE_RR73:  ret = 32403; break;
+	case FT8_REPORT_TYPE_73:    ret = 32404; break;
+	case FT8_REPORT_TYPE_GRID:  ret = grid_to_uint(grid); break;
+	case FT8_REPORT_TYPE_SNR:   ret = snr_to_uint(snr); break;
+	default: ret = -1;
+	}
+	return ret;
+}
+
+static u16  grid_to_uint(const char *grid)
+{
+	u16 ret;
+	ret  = (grid[0] - 'A') * 1800;
+	ret += (grid[1] - 'A') * 100;
+	ret += (grid[2] - '0') * 10;
+	ret += (grid[3] - '0');
+	return ret;
+}
+
+static u16  snr_to_uint(const int snr)
+{
+	u16 ret;
+	if (snr <= -31) {
+		ret = snr + 101 + 35 + 32400;
+	} else {
+		ret = snr + 35 + 32400;
+	}
+	return ret;
+}
+
+static u32  call_to_c28(const int type, const char *call, const int num)
+{
+	u32 ret;
+	u64 c58;
+	switch (type) {
+	case FT8_CALL_TYPE_DE:     ret = 0; break;
+	case FT8_CALL_TYPE_QRZ:    ret = 1; break;
+	case FT8_CALL_TYPE_CQ:     ret = 2; break;
+	case FT8_CALL_TYPE_CQ_NUM: ret = 3 + num; break;
+	case FT8_CALL_TYPE_CQ_TXT:
+		ret = cqtext_to_uint(call) + 1003;
+		break;
+	case FT8_CALL_TYPE_NSTD:
+		c58 = call_to_c58(call);
+		ret = hash(c58, 22) + 2063592;
+		break;
+	case FT8_CALL_TYPE_STD:
+		ret = stdcall_to_uint(call) + 6257896;
+		break;
+	default: ret = -1; break;
+	}
+	return ret;
+}
+
+static u32  cqtext_to_uint(const char *text)
+{
+	int i;
+	u32 ret;
+	ret = 0;
+	for (i = 0; i < 4; i++) {
+		if (!text[i])
+			break;
+		ret *= 27;
+		ret += text[i] - 'A' + 1;
+	}
+	return ret;
+}
+
+static u32  stdcall_to_uint(const char *c)
+{
+	u32 ret;
+	int length;
+	char t[7] = "      ";
+	length = calllen(c);
+	if ((c[0]=='3') && (c[1]=='D') && (c[2]=='A') && (c[3]=='0'))
+		makeup_3da0(t, c, length);
+	if ((c[0]=='3') && (c[1]=='X') && (c[2]>='A') && (c[2]<='Z'))
+		makrup_3x(t, c, length);
+	if ((c[1]>='0') && (c[1]<='9') && length<=5)
+		addspace_xnxxx(t, c, length);
+	ret =            idx(g_table + 0, 37, t[0]);
+	ret = ret * 36 + idx(g_table + 1, 36, t[1]);
+	ret = ret * 10 + (t[2] - '0');
+	ret = ret * 27 + (t[3]==' ') ? 0 : (t[3] - 'A' + 1);
+	ret = ret * 27 + (t[3]==' ') ? 0 : (t[3] - 'A' + 1);
+	ret = ret * 27 + (t[3]==' ') ? 0 : (t[3] - 'A' + 1);
+	return ret;
+}
+
+static int calllen(const char *c)
+{
+	int length;
+	length = 0;
+	while ((c[length] != 0) && (c[length] != ' '))
+		++length;
+	return length;
+}
+
+static void makeup_3da0(char *buff, const char *call, const int length)
+{
+	int i;
+	buff[0] = '3';
+	buff[1] = 'D';
+	buff[2] = '0';
+	for (i = 4; i < length; i++)
+		buff[i-1] = call[i];
+	return;
+}
+
+static void makrup_3x(char *buff, const char *call, const int length)
+{
+	int i;
+	buff[0] = 'Q';
+	for (i = 2; i < length; i++)
+		buff[i-1] = call[i];
+	return;
+}
+
+static void addspace_xnxxx(char *buff, const char *call, const int length)
+{
+	int i;
+	buff[0] = ' ';
+	for (i = 0; i < length; i++)
+		buff[i+1] = call[i];
+}
+
+
+static u64  call_to_c58(const char *call)
+{
+	u64 ret;
+	int i;
+	ret = 0;
+	for (i = 0; i < 11; i++) {
+		if (!call[i])
+			break;
+		ret *= 38;
+		if ((call[i] >= '0') && (call[i] <= '9'))
+			ret += call[i] - '0' + 1;
+		if ((call[i] >= 'A') && (call[i] <= 'Z'))
+			ret += call[i] - 'A' + 11;
+		if (call[i] == '/')
+			ret += 37;
+	}
+	return ret;
 }
 
 static void telemetry_to_t71(const u08 *data)
@@ -95,6 +309,15 @@ static void freetext_to_f71(const char *text)
 		add(g_buff, n << 1);
 	}
 	return;
+}
+
+static u32  hash(const u64 c58, int bit)
+{
+	u64 hash, mask;
+	mask = (1ull << bit) - 1;
+	hash = c58 * 47055833459ULL;
+	hash >>= (64 - bit);
+	return (u32)(hash & mask);
 }
 
 static void mul(u08 *bit, u08 x)
