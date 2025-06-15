@@ -31,5 +31,9 @@
 *.out
 *.app
 /.metadata/
+
+# VS 2022
 /.vs/
 /x64/
+/bb/x64/
+/sdr/x64/
