@@ -2,7 +2,7 @@
 //
 
 #include <stdio.h>
-#include "ft8.h"
+#include "ft8/ft8.h"
 
 int main()
 {

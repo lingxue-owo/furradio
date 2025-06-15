@@ -9,7 +9,7 @@
  */
 
 #include <stdio.h>
-#include "bb.h"
+#include "../bb.h"
 #include "ft8.h"
 
 #define SAMPLE_FREQ 12000//48000 /* [Hz] */

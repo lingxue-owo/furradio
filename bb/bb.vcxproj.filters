@@ -21,18 +21,18 @@
     <ClCompile Include="bb.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ft8_tb.c">
+    <ClCompile Include="ft8\ft8_tb.c">
       <Filter>Source Files\ft8</Filter>
     </ClCompile>
-    <ClCompile Include="ft8_enc_msg.c">
+    <ClCompile Include="ft8\ft8_enc_msg.c">
       <Filter>Source Files\ft8</Filter>
     </ClCompile>
-    <ClCompile Include="ft8_enc_wave.c">
+    <ClCompile Include="ft8\ft8_enc_wave.c">
       <Filter>Source Files\ft8</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ft8.h">
+    <ClInclude Include="ft8\ft8.h">
       <Filter>Source Files\ft8</Filter>
     </ClInclude>
     <ClInclude Include="bb.h">
