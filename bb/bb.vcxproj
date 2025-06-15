@@ -123,7 +123,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bb.cpp" />
+    <ClCompile Include="bb.c" />
+    <ClCompile Include="ft8_enc_msg.c" />
+    <ClCompile Include="ft8_enc_wave.c" />
+    <ClCompile Include="ft8_tb.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bb.h" />
+    <ClInclude Include="ft8.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

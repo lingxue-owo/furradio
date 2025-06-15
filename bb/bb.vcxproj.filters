@@ -13,10 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\ft8">
+      <UniqueIdentifier>{a6f8e847-5a0b-41a4-83a4-9950accb8e91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bb.cpp">
+    <ClCompile Include="bb.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ft8_tb.c">
+      <Filter>Source Files\ft8</Filter>
+    </ClCompile>
+    <ClCompile Include="ft8_enc_msg.c">
+      <Filter>Source Files\ft8</Filter>
+    </ClCompile>
+    <ClCompile Include="ft8_enc_wave.c">
+      <Filter>Source Files\ft8</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ft8.h">
+      <Filter>Source Files\ft8</Filter>
+    </ClInclude>
+    <ClInclude Include="bb.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

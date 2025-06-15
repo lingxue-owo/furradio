@@ -1,11 +1,12 @@
 // bb.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
+#include <stdio.h>
+#include "ft8.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    ft8_tb();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
