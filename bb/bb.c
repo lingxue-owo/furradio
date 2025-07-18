@@ -3,10 +3,12 @@
 
 #include <stdio.h>
 #include "ft8/ft8.h"
+#include "_bmp/bmp.h"
 
 int main()
 {
-    ft8_tb();
+    bmp_tb();
+//    ft8_tb();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

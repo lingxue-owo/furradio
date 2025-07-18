@@ -127,10 +127,15 @@
     <ClCompile Include="ft8\ft8_enc_msg.c" />
     <ClCompile Include="ft8\ft8_enc_wave.c" />
     <ClCompile Include="ft8\ft8_tb.c" />
+    <ClCompile Include="_bmp\bmp.c" />
+    <ClCompile Include="_bmp\bmp_tb.c" />
+    <ClCompile Include="_wav\wav.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bb.h" />
     <ClInclude Include="ft8\ft8.h" />
+    <ClInclude Include="_bmp\bmp.h" />
+    <ClInclude Include="_wav\wav.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

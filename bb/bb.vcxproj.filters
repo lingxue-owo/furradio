@@ -30,6 +30,15 @@
     <ClCompile Include="ft8\ft8_enc_wave.c">
       <Filter>Source Files\ft8</Filter>
     </ClCompile>
+    <ClCompile Include="_wav\wav.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_bmp\bmp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_bmp\bmp_tb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ft8\ft8.h">
@@ -37,6 +46,12 @@
     </ClInclude>
     <ClInclude Include="bb.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_wav\wav.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_bmp\bmp.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
