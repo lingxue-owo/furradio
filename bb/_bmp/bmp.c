@@ -13,9 +13,7 @@ int bmp_rgb_write(const char* filename, u08 *r, u08 *g, u08 *b, int width, int h
 	struct bmp_header_t h = {0};
 
 	len = width * 3;
-	printf("%d ", len);
 	len += (len % 4) ? (4 - len % 4) : 0;
-	printf("%d ", len);
 
 	buff = malloc(len); 	
 	if (!buff) return -1;

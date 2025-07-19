@@ -13,7 +13,7 @@
 #include "../_wav/wav.h"
 #include "ft8.h"
 
-#define SAMPLE_FREQ 12000//48000 /* [Hz] */
+#define SAMPLE_FREQ WAVE_RATE_12000
 
 static void print_symb(u08* symbol)
 {
@@ -32,9 +32,13 @@ void tb_1(void)
 			0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,
 			3,1,4,0,6, 5,2,
 	};
-	static s16 wave[15 * SAMPLE_FREQ]; // wave FT8 frame time: 12.640s
+	static s16 wave[15 * SAMPLE_FREQ]; 
+	// wave FT8 frame time: 12.640s
+
 	ft8_wave_get_block(wave, symb, SAMPLE_FREQ);
 	print_symb(symb);
+	wav_s16_write(wave, 15 * SAMPLE_FREQ, 
+		SAMPLE_FREQ, "ft8_tb1.wav");
 }
 
 void tb_2(void)

@@ -8,7 +8,7 @@
 int main()
 {
     bmp_tb();
-//    ft8_tb();
+    ft8_tb();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
