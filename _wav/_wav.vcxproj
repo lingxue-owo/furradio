@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{20c30b7f-1998-4ee0-9f75-5c51e666c136}</ProjectGuid>
-    <RootNamespace>sdr</RootNamespace>
+    <ProjectGuid>{d57b8d9e-0e5a-447f-8d6a-6829c956c33c}</ProjectGuid>
+    <RootNamespace>wav</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -123,7 +123,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="sdr.c" />
+    <ClCompile Include="wav.c" />
+    <ClCompile Include="wav_tb.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="wav.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

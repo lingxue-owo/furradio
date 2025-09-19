@@ -2,7 +2,6 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "../bb.h"
 #include "ft8.h"
 
 #define DEBUG_ 0

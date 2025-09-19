@@ -1,7 +1,7 @@
 #ifndef BMP_H_
 #define BMP_H_
 
-#include "../bb.h"
+#include "../common.h"
 
 #pragma pack(1)
 struct bmp_header_t {

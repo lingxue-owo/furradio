@@ -1,6 +1,5 @@
 #include "bmp.h"
 
-
 #define SIZE 256
 
 #define W (SIZE+128+1)
@@ -20,7 +19,7 @@ void bmp_tb(void)
 			b[i][j] = 128;
 		}
 	}
-	bmp_rgb_write("bmp_tb0.bmp", 
+	bmp_rgb_write("_bmp_tb0.bmp", 
 		(u08*)r, (u08*)g, (u08*)b, W, H);
 
 	for (i = 0; i < H; ++i) {
@@ -30,6 +29,11 @@ void bmp_tb(void)
 			b[i][j] = i;
 		}
 	}
-	bmp_rgb_write("bmp_tb2.bmp", 
+	bmp_rgb_write("_bmp_tb2.bmp", 
 		(u08*)r, (u08*)g, (u08*)b, W, H);
+}
+
+void main()
+{
+	bmp_tb();
 }

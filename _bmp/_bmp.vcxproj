@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{04cee6db-c33d-4c62-a0e6-45a2b0a8b64a}</ProjectGuid>
-    <RootNamespace>bb</RootNamespace>
+    <ProjectGuid>{2bd595f2-cc71-4856-87dd-a2fc219ebd38}</ProjectGuid>
+    <RootNamespace>bmp</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -123,19 +123,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bb.c" />
-    <ClCompile Include="ft8\ft8_enc_msg.c" />
-    <ClCompile Include="ft8\ft8_enc_wave.c" />
-    <ClCompile Include="ft8\ft8_tb.c" />
-    <ClCompile Include="_bmp\bmp.c" />
-    <ClCompile Include="_bmp\bmp_tb.c" />
-    <ClCompile Include="_wav\wav.c" />
+    <ClCompile Include="bmp.c" />
+    <ClCompile Include="bmp_tb.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bb.h" />
-    <ClInclude Include="ft8\ft8.h" />
-    <ClInclude Include="_bmp\bmp.h" />
-    <ClInclude Include="_wav\wav.h" />
+    <ClInclude Include="..\_common\common.h" />
+    <ClInclude Include="bmp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

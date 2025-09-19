@@ -9,9 +9,8 @@
  */
 
 #include <stdio.h>
-#include "../bb.h"
-#include "../_wav/wav.h"
 #include "ft8.h"
+#include "../_wav/wav.h"
 
 #define SAMPLE_FREQ WAVE_RATE_12000
 
@@ -62,11 +61,12 @@ void tb_3(void)
 	print_symb(symb0);
 }
 
-void ft8_tb(void) 
+int main(void) 
 {
 	tb_1();
 	tb_2();
 	tb_3();
+	return 0;
 }
 
 

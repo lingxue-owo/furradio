@@ -13,45 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\ft8">
-      <UniqueIdentifier>{a6f8e847-5a0b-41a4-83a4-9950accb8e91}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bb.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ft8\ft8_tb.c">
-      <Filter>Source Files\ft8</Filter>
-    </ClCompile>
-    <ClCompile Include="ft8\ft8_enc_msg.c">
-      <Filter>Source Files\ft8</Filter>
-    </ClCompile>
-    <ClCompile Include="ft8\ft8_enc_wave.c">
-      <Filter>Source Files\ft8</Filter>
-    </ClCompile>
-    <ClCompile Include="_wav\wav.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="_bmp\bmp.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="_bmp\bmp_tb.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="ft8.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_wav\wav.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ft8\ft8.h">
-      <Filter>Source Files\ft8</Filter>
-    </ClInclude>
-    <ClInclude Include="bb.h">
+    <ClCompile Include="ft8_enc_msg.c">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="_wav\wav.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="_bmp\bmp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    </ClCompile>
+    <ClCompile Include="ft8_enc_wave.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ft8_tb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_wav\wav.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
