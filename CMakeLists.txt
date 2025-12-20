@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(furradio LANGUAGES C)
 
-add_executable(furradio main.c)
+include_directories(include/)
+add_subdirectory(src/)
+add_subdirectory(tests/)
 
-install(TARGETS furradio RUNTIME DESTINATION bin)
+# install(TARGETS furradio RUNTIME DESTINATION bin)
