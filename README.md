@@ -1,5 +1,14 @@
 # furradio
 
+## bulid
+
+```
+mkdir build
+cd build
+cmake ../
+make
+```
+
 --------
 
 ./      Makefile and configure scripts
