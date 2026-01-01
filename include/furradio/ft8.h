@@ -1,7 +1,7 @@
 #ifndef FT8_H_
 #define FT8_H_
 
-#include "../common.h"
+#include "common.h"
 
 /* Encode */
 

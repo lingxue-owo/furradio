@@ -1,4 +1,4 @@
-#include "wav.h"
+#include "furradio/wav.h"
 
 int main()
 {

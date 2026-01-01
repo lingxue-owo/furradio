@@ -80,5 +80,6 @@ int wav_s16_write (int16_t* p, int length,
     fwrite(&h, sizeof(h), 1, fp);
     fwrite(p, sizeof(int16_t), length, fp);
     fclose(fp);
+    return 0;
 }
 
