@@ -1,16 +1,16 @@
 #ifndef FT8_H_
 #define FT8_H_
 
-#include "common.h"
+#include <stdint.h>
 
 /* Encode */
 
 /* ft8_enc.c:
  * radio/audio wave generate */
 
-int ft8_wave_init(const u08* symbol, const f64 if_freq, const f64 fs_freq);
-s16 ft8_wave_get_sample();
-int ft8_wave_get_block(s16* wave, const u08* symb, const f64 fs);
+int ft8_wave_init(const uint8_t* symbol, const double if_freq, const double fs_freq);
+int16_t ft8_wave_get_sample(void);
+int ft8_wave_get_block(int16_t* wave, const uint8_t* symb, const double fs);
 
  /* ft8_enc_msg.c:
   * commonly used frame
@@ -42,20 +42,20 @@ struct ft8_std_msg_t {
 	enum ft8_call_type_e   call_1_type;
 	enum ft8_call_type_e   call_2_type;
 	enum ft8_report_type_e report_type;
-	s16   cq_num_1, cq_num_2, snr;
-	u08   call_1_r, call_2_r, report_r;
+	int16_t cq_num_1, cq_num_2, snr;
+	uint8_t call_1_r, call_2_r, report_r;
 	const char *call_1, *call_2, *grid;
 };
 
 struct ft8_nstd_call_t {
 	const char *hash_call, *text_call;
-	u08 is_hash_local, is_cq, report;
+	uint8_t is_hash_local, is_cq, report;
 };
 
-int ft8_encode_00(u08* symbol, const char *freetext);
-int ft8_encode_05(u08* symbol, const u08 telemetry[18]);
-int ft8_encode_1(u08* symbol, const struct ft8_std_msg_t *p);
-int ft8_encode_4(u08* symbol, const struct ft8_nstd_call_t *p);
+int ft8_encode_00(uint8_t* symbol, const char *freetext);
+int ft8_encode_05(uint8_t* symbol, const uint8_t telemetry[18]);
+int ft8_encode_1(uint8_t* symbol, const struct ft8_std_msg_t *p);
+int ft8_encode_4(uint8_t* symbol, const struct ft8_nstd_call_t *p);
 
 // Decode
 
@@ -63,3 +63,9 @@ int ft8_encode_4(u08* symbol, const struct ft8_nstd_call_t *p);
 void ft8_tb(void);
 
 #endif
+
+
+
+
+
+

@@ -1,4 +1,5 @@
 #include <furradio/bmp.h>
+#include <common.h>
 
 #define SIZE 256
 

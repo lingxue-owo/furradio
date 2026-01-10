@@ -2,6 +2,8 @@
 #ifndef SSTV_H_
 #define SSTV_H_
 
+#include <stdint.h>
+
 enum sstv_type {
     SSTV_TYPE_UNDEFINED,
 
@@ -19,7 +21,33 @@ enum sstv_ratio {
     SSTV_RATIO_11, SSTV_RATIO_43, SSTV_RATIO_169,
 };
 
+// system param
 int sstv_line_get(enum sstv_type type);
 enum sstv_ratio sstv_ratio_get(enum sstv_type type);
+
+// testcards
+enum sstv_testcard {
+    SSTV_TESTCARD_UNDIFINED,
+    SSTV_TESTCARD_COLORBAR_75,
+    SSTV_TESTCARD_COLORBAR_100,
+    SSTV_TESTCARD_COLORBAR_GB3174,
+    SSTV_TESTCARD_COLORBAR_SMPTE,
+};
+
+enum sstv_smpte_patten {
+    SSTV_SMPTE_P1,
+    SSTV_SMPTE_P2,
+    SSTV_SMPTE_P3,
+    SSTV_SMPTE_P4,
+};
+
+void sstv_colorbar1_gen(uint8_t *r, uint8_t *g, uint8_t *b,
+                        const int width, const int hight, const enum sstv_testcard ctype);
+static inline void sstv_cbgb_gen(uint8_t *r, uint8_t *g, uint8_t *b, const int w, const int h) {
+    sstv_colorbar1_gen(r, g, b, w, h, SSTV_TESTCARD_COLORBAR_GB3174);}
+static inline void sstv_cb100_gen(uint8_t *r, uint8_t *g, uint8_t *b, const int w, const int h) {
+    sstv_colorbar1_gen(r, g, b, w, h, SSTV_TESTCARD_COLORBAR_100);}
+static inline void sstv_cb75_gen(uint8_t *r, uint8_t *g, uint8_t *b, const int w, const int h) {
+    sstv_colorbar1_gen(r, g, b, w, h, SSTV_TESTCARD_COLORBAR_75);}
 
 #endif

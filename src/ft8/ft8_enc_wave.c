@@ -1,8 +1,9 @@
+#include "furradio/ft8.h"
+#include "common.h"
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdio.h>
-
-#include "furradio/ft8.h"
 
 #define DEBUG_ 0
 #define NCOFS 4294967296.0  /* 32bit NCO Full Scale */

@@ -1,4 +1,6 @@
 #include "furradio/ft8.h"
+#include "common.h"
+
 #include <stdio.h>
 
 // bit  length note
@@ -217,9 +219,9 @@ static u32  stdcall_to_uint(const char *c)
 	ret =            idx(g_table + 0, 37, t[0]);
 	ret = ret * 36 + idx(g_table + 1, 36, t[1]);
 	ret = ret * 10 + (t[2] - '0');
-	ret = ret * 27 + (t[3]==' ') ? 0 : (t[3] - 'A' + 1);
-	ret = ret * 27 + (t[3]==' ') ? 0 : (t[3] - 'A' + 1);
-	ret = ret * 27 + (t[3]==' ') ? 0 : (t[3] - 'A' + 1);
+	ret = ret * 27 + ((t[3]==' ') ? 0 : (t[3] - 'A' + 1));
+	ret = ret * 27 + ((t[3]==' ') ? 0 : (t[3] - 'A' + 1));
+	ret = ret * 27 + ((t[3]==' ') ? 0 : (t[3] - 'A' + 1));
 	return ret;
 }
 

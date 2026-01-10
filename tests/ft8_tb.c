@@ -8,9 +8,11 @@
  ============================================================================
  */
 
-#include <stdio.h>
 #include "furradio/ft8.h"
 #include "furradio/wav.h"
+#include "common.h"
+
+#include <stdio.h>
 
 #define SAMPLE_FREQ WAVE_RATE_12000
 
