@@ -31,7 +31,8 @@ enum sstv_ratio  sstv_ratio_get(enum sstv_type type)
 {
     switch (type) {
         case SSTV_MART_1: case SSTV_MART_2: case SSTV_MART_3: case SSTV_MART_4:
-        case SSTV_SCOT_1: case SSTV_SCOT_2: case SSTV_SCOT_3: case SSTV_SCOT_4: case SSTV_SCOT_DX:
+        case SSTV_SCOT_1: case SSTV_SCOT_2: case SSTV_SCOT_3: case SSTV_SCOT_4:
+        case SSTV_SCOT_DX:
         case SSTV_PD_120:
         case SSTV_AVT_90:   case SSTV_AVT_94:
         case SSTV_ROBOT_36: case SSTV_ROBOT_72:

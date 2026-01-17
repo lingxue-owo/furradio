@@ -7,7 +7,39 @@
 #include <string.h>
 #include <stdlib.h>
 
-int bmp_rgb_write(const char* filename, u08 *r, u08 *g, u08 *b, int width, int height)
+int bmp_write(const char* filename, const f32 *r, const f32 *g, const f32 *b,
+	const int width, const int height, enum bmp_color color)
+{
+	int ret, i;
+	u08 *rr, *gg, *bb;
+	f32 t;
+	rr = malloc(width * height * sizeof(u08));
+	gg = malloc(width * height * sizeof(u08));
+	bb = malloc(width * height * sizeof(u08));
+	for (i = 0; i < width * height; ++i) {
+		switch(color) {
+		case BMP_24BIT_FULL:
+			t=r[i]*255; if(t>255)t=255; if(t<0)t=0; rr[i]=(u08)t;
+			t=g[i]*255; if(t>255)t=255; if(t<0)t=0; gg[i]=(u08)t;
+			t=b[i]*255; if(t>255)t=255; if(t<0)t=0; bb[i]=(u08)t;
+			break;
+		case BMP_24BIT_LIMIT:
+			t=r[i]*219+16; if(t>255)t=255; if(t<0)t=0; rr[i]=(u08)t;
+			t=g[i]*219+16; if(t>255)t=255; if(t<0)t=0; gg[i]=(u08)t;
+			t=b[i]*219+16; if(t>255)t=255; if(t<0)t=0; bb[i]=(u08)t;
+			break;
+		default:
+			rr[i] = gg[i] = bb[i] = 0;
+			break;
+		}
+	}
+	ret = bmp_rgb_write(filename,rr,gg,bb,width,height);
+	free(rr); free(gg); free(bb);
+	return ret;
+}
+
+int bmp_rgb_write(const char* filename,
+				  u08 *r, u08 *g, u08 *b, int width, int height)
 {
 	int i, j, k, len;
 	FILE* fp;

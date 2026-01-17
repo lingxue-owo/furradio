@@ -2,34 +2,36 @@
 #include "common.h"
 
 //                                W    Y    C    G    M    R    B   K
-static const u08 tbr_gb3174[] = {255, 191,   0,   0, 191, 191,   0, 0};
-static const u08 tbg_gb3174[] = {255, 191, 191, 191,   0,   0,   0, 0};
-static const u08 tbb_gb3174[] = {255,   0, 191,   0, 191,   0, 191, 0};
+static const float tbr_gb[] = {1., .75,  0.,  0., .75, .75,  0., 0.,};
+static const float tbg_gb[] = {1., .75, .75, .75,  0.,  0.,  0., 0.,};
+static const float tbb_gb[] = {1.,  0., .75,  0., .75,  0., .75, 0.,};
 
-static const u08 tbr_100[]    = {255, 255,   0,   0, 255, 255,   0, 0};
-static const u08 tbg_100[]    = {255, 255, 255, 255,   0,   0,   0, 0};
-static const u08 tbb_100[]    = {255,   0, 255,   0, 255,   0, 255, 0};
+static const float tbr_100[] = {1, 1, 0, 0, 1, 1, 0, 0,};
+static const float tbg_100[] = {1, 1, 1, 1, 0, 0, 0, 0,};
+static const float tbb_100[] = {1, 0, 1, 0, 1, 0, 1, 0,};
 
-static const u08 tbr_75[]     = {191, 191,   0,   0, 191, 191,   0, 0};
-static const u08 tbg_75[]     = {191, 191, 191, 191,   0,   0,   0, 0};
-static const u08 tbb_75[]     = {191,   0, 191,   0, 191,   0, 191, 0};
+static const float tbr_75[]  = {.75, .75,  0.,  0., .75, .75,  0., 0.,};
+static const float tbg_75[]  = {.75, .75, .75, .75,  0.,  0.,  0., 0.,};
+static const float tbb_75[]  = {.75,  0., .75,  0., .75,  0., .75, 0.,};
 
-static void line(u08 *r, u08 *g, u08 *b, const int w, const int n,
-                 const u08 *tbr, const u08 *tbg, const u08 *tbb);
+static void line(f32 *r, f32 *g, f32 *b, const int w, const int n,
+                 const f32 *tbr, const f32 *tbg, const f32 *tbb);
 
-void sstv_colorbar1_gen(uint8_t *r, uint8_t *g, uint8_t *b,
+void sstv_colorbar1_gen(float *r, float *g, float *b,
                         const int w, const int h, const enum sstv_testcard c)
 {
     int y;
-    u08 *rl, *gl, *bl;
-    const u08 *tbr, *tbg, *tbb;
+    float *rl, *gl, *bl;
+    const float *tbr, *tbg, *tbb;
     switch (c) {
-        case SSTV_TESTCARD_COLORBAR_GB3174: tbr = tbr_gb3174, tbg = tbg_gb3174, tbb = tbb_gb3174; break;
-        case SSTV_TESTCARD_COLORBAR_100:    tbr = tbr_100,    tbg = tbg_100,    tbb = tbb_100;    break;
-        case SSTV_TESTCARD_COLORBAR_75:     tbr = tbr_75,     tbg = tbg_75,     tbb = tbb_75;     break;
+        case SSTV_TESTCARD_COLORBAR_GB3174:
+            tbr = tbr_gb,  tbg = tbg_gb,  tbb = tbb_gb;  break;
+        case SSTV_TESTCARD_COLORBAR_100:
+            tbr = tbr_100, tbg = tbg_100, tbb = tbb_100; break;
+        case SSTV_TESTCARD_COLORBAR_75:
+            tbr = tbr_75,  tbg = tbg_75,  tbb = tbb_75;  break;
         default: return;
     }
-
     for (y = 0; y < h; ++y) {
         rl = r + y * w;
         gl = g + y * w;
@@ -38,8 +40,8 @@ void sstv_colorbar1_gen(uint8_t *r, uint8_t *g, uint8_t *b,
     }
 }
 
-static void line(u08 *r, u08 *g, u08 *b, const int w, const int n,
-                 const u08 *tbr, const u08 *tbg, const u08 *tbb)
+static void line(f32 *r, f32 *g, f32 *b, const int w, const int n,
+                 const f32 *tbr, const f32 *tbg, const f32 *tbb)
 {
     int i, j, k, l;
     l = w / n; // color bar width [px]

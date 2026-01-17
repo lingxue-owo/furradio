@@ -41,13 +41,26 @@ enum sstv_smpte_patten {
     SSTV_SMPTE_P4,
 };
 
-void sstv_colorbar1_gen(uint8_t *r, uint8_t *g, uint8_t *b,
-                        const int width, const int hight, const enum sstv_testcard ctype);
-static inline void sstv_cbgb_gen(uint8_t *r, uint8_t *g, uint8_t *b, const int w, const int h) {
+void sstv_colorbar1_gen(float *r, float *g, float *b,
+            const int width, const int hight, const enum sstv_testcard ctype);
+static inline void sstv_cbgb_gen(
+    float *r, float *g, float *b, const int w, const int h) {
     sstv_colorbar1_gen(r, g, b, w, h, SSTV_TESTCARD_COLORBAR_GB3174);}
-static inline void sstv_cb100_gen(uint8_t *r, uint8_t *g, uint8_t *b, const int w, const int h) {
+static inline void sstv_cb100_gen(
+    float *r, float *g, float *b, const int w, const int h) {
     sstv_colorbar1_gen(r, g, b, w, h, SSTV_TESTCARD_COLORBAR_100);}
-static inline void sstv_cb75_gen(uint8_t *r, uint8_t *g, uint8_t *b, const int w, const int h) {
+static inline void sstv_cb75_gen(
+    float *r, float *g, float *b, const int w, const int h) {
     sstv_colorbar1_gen(r, g, b, w, h, SSTV_TESTCARD_COLORBAR_75);}
+
+void sstv_cbsmpte_gen(
+    float *y, float *cb, float *cr, const int w, const int h);
+void sstv_cbsmpte_wide_gen(
+    float *y, float *cb, float *cr, const int w, const int h);
+
+void sstv_ycbcr2rgb_bt601(uint8_t *r, uint8_t *g, uint8_t *b,
+    const uint8_t *y, const uint8_t *cb, const uint8_t *cr,
+    const int w, const int h);
+
 
 #endif

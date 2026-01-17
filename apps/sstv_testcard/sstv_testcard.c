@@ -27,41 +27,39 @@ int main(int argc, char *argv[])
     enum sstv_testcard ctype = SSTV_TESTCARD_UNDIFINED;
     enum sstv_type     stype = SSTV_TYPE_UNDEFINED;
     switch (argc) {
-        case 3:
-            if (!strcmp(argv[2], "cb75"))  ctype = SSTV_TESTCARD_COLORBAR_75;
-            if (!strcmp(argv[2], "cb100")) ctype = SSTV_TESTCARD_COLORBAR_100;
-            if (!strcmp(argv[2], "cbgb"))  ctype = SSTV_TESTCARD_COLORBAR_GB3174;
-            if (!strcmp(argv[2], "smpte")) ctype = SSTV_TESTCARD_COLORBAR_SMPTE;
-        case 2:
-            if (!strcmp(argv[1], "m1"))      stype = SSTV_MART_1;
-            if (!strcmp(argv[1], "m2"))      stype = SSTV_MART_2;
-            if (!strcmp(argv[1], "m3"))      stype = SSTV_MART_3;
-            if (!strcmp(argv[1], "m4"))      stype = SSTV_MART_4;
-            if (!strcmp(argv[1], "s1"))      stype = SSTV_SCOT_1;
-            if (!strcmp(argv[1], "s2"))      stype = SSTV_SCOT_2;
-            if (!strcmp(argv[1], "s3"))      stype = SSTV_SCOT_3;
-            if (!strcmp(argv[1], "s4"))      stype = SSTV_SCOT_4;
-            if (!strcmp(argv[1], "sdx"))     stype = SSTV_SCOT_DX;
-            if (!strcmp(argv[1], "pd120"))   stype = SSTV_PD_120;
-            if (!strcmp(argv[1], "avt90"))   stype = SSTV_AVT_90;
-            if (!strcmp(argv[1], "avt94"))   stype = SSTV_AVT_94;
-            if (!strcmp(argv[1], "robot36")) stype = SSTV_ROBOT_36;
-            if (!strcmp(argv[1], "robot72")) stype = SSTV_ROBOT_72;
+    case 3:
+        if (!strcmp(argv[2], "cb75"))  ctype = SSTV_TESTCARD_COLORBAR_75;
+        if (!strcmp(argv[2], "cb100")) ctype = SSTV_TESTCARD_COLORBAR_100;
+        if (!strcmp(argv[2], "cbgb"))  ctype = SSTV_TESTCARD_COLORBAR_GB3174;
+        if (!strcmp(argv[2], "smpte")) ctype = SSTV_TESTCARD_COLORBAR_SMPTE;
+    case 2:
+        if (!strcmp(argv[1], "m1"))      stype = SSTV_MART_1;
+        if (!strcmp(argv[1], "m2"))      stype = SSTV_MART_2;
+        if (!strcmp(argv[1], "m3"))      stype = SSTV_MART_3;
+        if (!strcmp(argv[1], "m4"))      stype = SSTV_MART_4;
+        if (!strcmp(argv[1], "s1"))      stype = SSTV_SCOT_1;
+        if (!strcmp(argv[1], "s2"))      stype = SSTV_SCOT_2;
+        if (!strcmp(argv[1], "s3"))      stype = SSTV_SCOT_3;
+        if (!strcmp(argv[1], "s4"))      stype = SSTV_SCOT_4;
+        if (!strcmp(argv[1], "sdx"))     stype = SSTV_SCOT_DX;
+        if (!strcmp(argv[1], "pd120"))   stype = SSTV_PD_120;
+        if (!strcmp(argv[1], "avt90"))   stype = SSTV_AVT_90;
+        if (!strcmp(argv[1], "avt94"))   stype = SSTV_AVT_94;
+        if (!strcmp(argv[1], "robot36")) stype = SSTV_ROBOT_36;
+        if (!strcmp(argv[1], "robot72")) stype = SSTV_ROBOT_72;
 
-            if (!strcmp(argv[1], "ntsc"))    stype = SDTV_NTSC_M;
-            if (!strcmp(argv[1], "pal"))     stype = SDTV_PAL_D;
-            if (!strcmp(argv[1], "hd"))      stype = HDTV_720;
-            if (!strcmp(argv[1], "fhd"))     stype = HDTV_1080;
-            if (!strcmp(argv[1], "uhd"))     stype = HDTV_4K;
-            if (!strcmp(argv[1], "8k"))      stype = HDTV_8K;
-            break;
-        default:
-            help();
-            return -2;
+        if (!strcmp(argv[1], "ntsc"))    stype = SDTV_NTSC_M;
+        if (!strcmp(argv[1], "pal"))     stype = SDTV_PAL_D;
+        if (!strcmp(argv[1], "hd"))      stype = HDTV_720;
+        if (!strcmp(argv[1], "fhd"))     stype = HDTV_1080;
+        if (!strcmp(argv[1], "uhd"))     stype = HDTV_4K;
+        if (!strcmp(argv[1], "8k"))      stype = HDTV_8K;
+        break;
+    default:
+        help();
+        return -2;
     }
-    if (ctype == SSTV_TESTCARD_UNDIFINED ||
-        stype == SSTV_TYPE_UNDEFINED)
-    {
+    if (ctype == SSTV_TESTCARD_UNDIFINED || stype == SSTV_TYPE_UNDEFINED) {
         help();
         return -3;
     }
@@ -72,7 +70,7 @@ int main(int argc, char *argv[])
 static void gen(enum sstv_type s, enum sstv_testcard c)
 {
     int h, w; //hight, width;
-    u08 *r, *g, *b;
+    f32 *r, *g, *b;
     enum sstv_ratio t;
     char f[256];
 
@@ -86,9 +84,9 @@ static void gen(enum sstv_type s, enum sstv_testcard c)
     default: w = h;
     }
 
-    r = (u08*)malloc(h * w * sizeof(u08));
-    g = (u08*)malloc(h * w * sizeof(u08));
-    b = (u08*)malloc(h * w * sizeof(u08));
+    r = (f32*)malloc(h * w * sizeof(f32));
+    g = (f32*)malloc(h * w * sizeof(f32));
+    b = (f32*)malloc(h * w * sizeof(f32));
 
     switch (c) {
     case SSTV_TESTCARD_COLORBAR_GB3174: sstv_cbgb_gen(r,g,b,w,h);  break;
@@ -97,8 +95,10 @@ static void gen(enum sstv_type s, enum sstv_testcard c)
     default: break;
     }
 
-    sprintf(f, "testcard_%dx%d_%d_%d.bmp", h, w, c, s);
-    bmp_rgb_write(f, r, g, b, w, h);
+    sprintf(f, "testcard_%dx%d_%d_%d_F.bmp", h, w, c, s);
+    bmp_write(f, r, g, b, w, h, BMP_24BIT_FULL);
+    sprintf(f, "testcard_%dx%d_%d_%d_L.bmp", h, w, c, s);
+    bmp_write(f, r, g, b, w, h, BMP_24BIT_LIMIT);
     free(r); free(g); free(b);
     return;
 }

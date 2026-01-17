@@ -8,7 +8,8 @@
 /* ft8_enc.c:
  * radio/audio wave generate */
 
-int ft8_wave_init(const uint8_t* symbol, const double if_freq, const double fs_freq);
+int ft8_wave_init(const uint8_t* symbol,
+				  const double if_freq, const double fs_freq);
 int16_t ft8_wave_get_sample(void);
 int ft8_wave_get_block(int16_t* wave, const uint8_t* symb, const double fs);
 

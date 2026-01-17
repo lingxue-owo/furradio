@@ -33,8 +33,15 @@ struct bmp_header_t {
 // Data: u08 B-G-R
 
 int bmp_rgb_write(const char* filename,
-				  uint8_t* r, uint8_t *g, uint8_t *b,
-				  int width, int height);
+				  uint8_t* r, uint8_t* g, uint8_t* b, int width, int height);
+
+enum bmp_color {
+	BMP_24BIT_FULL, BMP_24BIT_LIMIT,
+};
+
+int bmp_write(const char* filename,
+			  const float *r, const float *g, const float *b,
+			  const int width, const int height, enum bmp_color color);
 
 // testbench
 void bmp_tb(void);
