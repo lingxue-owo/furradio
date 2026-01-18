@@ -53,14 +53,19 @@ static inline void sstv_cb75_gen(
     float *r, float *g, float *b, const int w, const int h) {
     sstv_colorbar1_gen(r, g, b, w, h, SSTV_TESTCARD_COLORBAR_75);}
 
-void sstv_cbsmpte_gen(
-    float *y, float *cb, float *cr, const int w, const int h);
-void sstv_cbsmpte_wide_gen(
-    float *y, float *cb, float *cr, const int w, const int h);
 
-void sstv_ycbcr2rgb_bt601(uint8_t *r, uint8_t *g, uint8_t *b,
-    const uint8_t *y, const uint8_t *cb, const uint8_t *cr,
-    const int w, const int h);
+void sstv_colorbar2_gen(float *cr, float *y, float *cb,
+            const int w, const int h, const enum sstv_ratio ratio);
+static inline void sstv_cbsmpte_gen(
+    float *cr, float *y, float *cb, const int w, const int h) {
+    sstv_colorbar2_gen(cr, y, cb, w, h, SSTV_RATIO_43);}
+static inline void sstv_cbsmptew_gen(
+        float *cr, float *y, float *cb, const int w, const int h) {
+        sstv_colorbar2_gen(cr, y, cb, w, h, SSTV_RATIO_169);}
 
+void sstv_rgb2ycbcr_bt601(float *rcr, float *gy, float *bcb, const int wxh);
+void sstv_ycbcr2rgb_bt601(float *rcr, float *gy, float *bcb, const int wxh);
+void sstv_rgb2ycbcr_bt709(float *rcr, float *gy, float *bcb, const int wxh);
+void sstv_ycbcr2rgb_bt709(float *rcr, float *gy, float *bcb, const int wxh);
 
 #endif

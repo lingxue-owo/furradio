@@ -89,16 +89,19 @@ static void gen(enum sstv_type s, enum sstv_testcard c)
     b = (f32*)malloc(h * w * sizeof(f32));
 
     switch (c) {
-    case SSTV_TESTCARD_COLORBAR_GB3174: sstv_cbgb_gen(r,g,b,w,h);  break;
-    case SSTV_TESTCARD_COLORBAR_75:     sstv_cb75_gen(r,g,b,w,h);  break;
-    case SSTV_TESTCARD_COLORBAR_100:    sstv_cb100_gen(r,g,b,w,h); break;
+    case SSTV_TESTCARD_COLORBAR_GB3174: sstv_cbgb_gen(r,g,b,w,h);    break;
+    case SSTV_TESTCARD_COLORBAR_75:     sstv_cb75_gen(r,g,b,w,h);    break;
+    case SSTV_TESTCARD_COLORBAR_100:    sstv_cb100_gen(r,g,b,w,h);   break;
+    case SSTV_TESTCARD_COLORBAR_SMPTE:
+        (t == SSTV_RATIO_169) ? sstv_cbsmptew_gen(r,g,b,w,h) :
+                                sstv_cbsmpte_gen(r,g,b,w,h)  ;
+        sstv_ycbcr2rgb_bt709(r,g,b,w*h);
+        break;
     default: break;
     }
 
     sprintf(f, "testcard_%dx%d_%d_%d_F.bmp", h, w, c, s);
     bmp_write(f, r, g, b, w, h, BMP_24BIT_FULL);
-    sprintf(f, "testcard_%dx%d_%d_%d_L.bmp", h, w, c, s);
-    bmp_write(f, r, g, b, w, h, BMP_24BIT_LIMIT);
     free(r); free(g); free(b);
     return;
 }
